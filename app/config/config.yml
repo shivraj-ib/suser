@@ -36,6 +36,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+                 - 'form/fields.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -66,3 +68,10 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+    
+# FOS bundle configuration
+fos_user:
+    db_driver: orm
+    user_class:  AppBundle\Entity\User
+    firewall_name: main
+

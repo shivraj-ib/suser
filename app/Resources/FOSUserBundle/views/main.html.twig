@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Suser</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        {% endblock %}
+        {% block javascripts %}
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        {% endblock %}
+    </head>
+    <body>
+        {% block navmenu %} 
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">WebSiteName</a>
+                    </div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/login">Login</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                        <li><a href="/profile">Edit</a></li>                        
+                    </ul>
+                </div>
+            </nav>
+        {% endblock %}    
+        {% block body %}  
+            <div class="container">
+                <h3>Basic Navbar Example</h3>
+                <p>A navigation bar is a navigation header that is placed at the top of the page.</p>
+            </div>
+        {% endblock %}
+    </body>
+</html>
+
+
