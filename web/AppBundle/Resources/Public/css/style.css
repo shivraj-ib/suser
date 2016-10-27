@@ -31,5 +31,15 @@ and open the template in the editor.
     font-weight: bold;
     text-align: center;
     margin-bottom: 12px;
-    width
+}
+   
+   
+.flash-success {
+    background: green;
+    color: white;
+    padding-left: 10px;
+}
+
+.field-error {
+    color: #d83434;
 }

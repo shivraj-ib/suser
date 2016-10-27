@@ -18,18 +18,23 @@
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="#">WebSiteName</a>
+                        {% if app.user %}
+                        <a class="navbar-brand" href="#">Welcome {{app.user.username}}</a>
+                        {% endif %} 
                     </div>
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="/login">Login</a></li>
-                        <li><a href="/logout">Logout</a></li>
-                        <li><a href="/profile">Edit</a></li>                        
+                    <ul class="nav navbar-nav">                        
+                        {% if app.user %}                         
+                            <li><a href="/profile">Edit Profile</a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        {% else %}
+                            <li class="active"><a href="/login">Login</a></li>
+                        {% endif %}                                             
                     </ul>
                 </div>
             </nav>
         {% endblock %}
         <div class="container">
-        {% block body %}
+        {% block body %}                
                 <h3>Basic Navbar Example</h3>
                 <p>A navigation bar is a navigation header that is placed at the top of the page.</p>
         {% endblock %}

@@ -1,2 +1,39 @@
 {% extends 'main.html.twig' %}
+{% block body %}
+    {% if message is defined %}
+    <div class="flash-success">
+        {{ message }}
+    </div>
+    {% endif %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>username</th>
+                <th>email</th>
+                <th>name</th>
+                <th>status</th>
+                <th>roles</th>
+                <th>action</th>
+            </tr>
+        </thead>
+        <tbody>            
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{% if user.enabled%}Active{% else %}<span class="red">Inactive</span>{% endif %}</td>
+                    <td>{{ user.roles|join('|') }}</td>
+                    <td>
+                        <a class="btn btn-primary" href="{{ path('edit_user', {'id':user.id})}}" >Edit</a>
+                        <a class="btn btn-danger" href="{{ path('delete_user', {'id':user.id})}}" >Delete</a>
+                    </td>
+                </tr>    
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}    
+
 
