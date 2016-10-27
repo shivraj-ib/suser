@@ -1,0 +1,7 @@
+{% trans_default_domain 'FOSUserBundle' %}
+<div class="user-from-container">
+{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register','novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}    
+    <button type="submit" class="btn btn-primary" id="_submit" name="_submit">Submit</button>
+{{ form_end(form) }}
+</div>
