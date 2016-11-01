@@ -6,6 +6,12 @@ use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\Event\FormEvent;
+use FOS\UserBundle\FOSUserEvents;
+use FOS\UserBundle\Event\GetResponseUserEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DefaultController extends Controller {
 
@@ -47,7 +53,7 @@ class DefaultController extends Controller {
      */
     function editUser($id,Request $request) {
         
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if ($id != $this->getUser()->getId() && false === $this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->redirectToRoute('admin', array('message' => 'You are not allowed'));
         }
         
@@ -59,26 +65,45 @@ class DefaultController extends Controller {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
+        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */        
         $formFactory = $this->get('fos_user.profile.form.factory');
-
-        $form = $formFactory->createForm();
+        $form = $formFactory->createForm();        
         $form->setData($user);
-        $form->handleRequest($request);
+        $dispatcher = $this->get('event_dispatcher');
+        $form->handleRequest($request);        
+        
 
         if ($form->isValid()) {
             /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
             $userManager = $this->get('fos_user.user_manager');
-            $userManager->updateUser($user);
+            
+            $event = new FormEvent($form, $request);
+            $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
 
-            $session = $this->getRequest()->getSession();
-            $session->getFlashBag()->add('message', 'Successfully updated');
-            $url = $this->generateUrl('matrix_edi_viewUser');
-            $response = new RedirectResponse($url);
+            $userManager->updateUser($user);
+            
+            //if user is not editing his own profile
+            if($id != $this->getUser()->getId()){
+                $url = $this->generateUrl('admin');
+                return new RedirectResponse($url);
+            }
+
+            if (null === $response = $event->getResponse()) {
+                $url = $this->generateUrl('fos_user_profile_show');
+                $response = new RedirectResponse($url);
+            }
+
+            $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+
+            return $response;
+            //$session = $this->getRequest()->getSession();
+            //$session->getFlashBag()->add('message', 'Successfully updated');           
+            
         }
 
         return $this->render('FOSUserBundle:Profile:edit.html.twig', array(
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'id' => $id
         ));
     }
 }

@@ -23,7 +23,8 @@
                         {% endif %} 
                     </div>
                     <ul class="nav navbar-nav">                        
-                        {% if app.user %}                         
+                        {% if app.user %}
+                            <li><a href="/admin">UsersList</a></li>
                             <li><a href="/profile">Edit Profile</a></li>
                             <li><a href="/logout">Logout</a></li>
                         {% else %}
